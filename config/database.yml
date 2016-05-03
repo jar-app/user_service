@@ -17,12 +17,14 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  host: db
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
 
 development:
   <<: *default
+  user: postgres
   database: user_service_development
 
   # The specified database role being used to connect to postgres.
@@ -57,6 +59,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  user: postgres
   database: user_service_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
