@@ -1,0 +1,14 @@
+# This is the configuration used to check the rubocop source code.
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/fixtures/**/*'
+    - 'tmp/**/*'
+
+  TargetRubyVersion: 2.3
+
+Style/BlockComments:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
