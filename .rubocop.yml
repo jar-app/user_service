@@ -12,3 +12,6 @@ Style/BlockComments:
 
 Style/StringLiterals:
   Enabled: false
+
+Metrics/LineLength:
+  Max: 120
