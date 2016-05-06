@@ -14,9 +14,10 @@ class RubocopGitHookCreator
 
   private
 
-  GIT_DIR = ".git".freeze
+  GIT_DIR = '.git'.freeze
   HOOK_PATH = "#{GIT_DIR}/hooks/pre-commit".freeze
-  RUBOCOP_CMD = "rubocop-git --cached".freeze
+  # rubocop:disable Metrics/LineLength
+  RUBOCOP_CMD = "git diff --cached --name-only --diff-filter=AMC | grep '\.rb$' | tr '\n' ' ' | bundle exec rubocop -R -a".freeze
   HOOK_CONTENT = ['#!/bin/sh', RUBOCOP_CMD].join("\n").freeze
 
   def install_hook?
@@ -42,7 +43,7 @@ class RubocopGitHookCreator
       f.flush
     end
     FileUtils.chmod 0755, HOOK_PATH
-    puts "Successfully installed rubocop pre-commit hook"
+    puts 'Successfully installed rubocop pre-commit hook'
   end
 end
 

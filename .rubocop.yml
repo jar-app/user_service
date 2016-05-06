@@ -10,8 +10,14 @@ AllCops:
 Style/BlockComments:
   Enabled: false
 
-Style/StringLiterals:
+Style/Documentation:
   Enabled: false
+
+Style/StringLiterals:
+  En  abled: false
 
 Metrics/LineLength:
   Max: 120
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
