@@ -4,6 +4,7 @@ AllCops:
     - 'vendor/**/*'
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
+    - 'db/schema.rb'
 
   TargetRubyVersion: 2.3
 
