@@ -27,24 +27,33 @@ module Environment
   end
 end
 
+def container_name_for_environment(environment)
+  "#{environment}_#{UserServiceName}_1"
+end
+
 namespace :docker do
-  UserService = 'user_service'.freeze
+  UserServiceName = 'user_service'.freeze
+
+  desc "Starts a running container for a given environment #{Environment::All.join(', ')}"
   task :start, :environment do |_t, args|
     environment = Environment.parse(args)
     Rake::Task["docker:build"].invoke(environment)
     override_file = Environment.docker_compose_override_for_environment(environment)
-    sh "docker-compose -f docker-compose.yml -f #{override_file} up -d"
+    sh "docker-compose -f docker-compose.yml -f #{override_file} -p #{environment} up -d"
     Rake::Task["docker:setup"].invoke(environment)
   end
 
-  task :build, :environment do |_t, _args|
+  desc "Build all the services defined in the docker-compose"
+  task :build do
     sh "docker-compose build"
   end
 
-  task :setup do
+  desc "Set-up task run after containers are started"
+  task :setup, :environment do |_t, args|
+    environment = Environment.parse(args)
     # Database set-up
     loop do
-      begin sh "docker exec userservice_user_service_1 bundle exec rake db:create db:migrate"
+      begin sh "docker exec #{container_name_for_environment(environment)} bundle exec rake db:create db:migrate"
       rescue
         sleep 0.1
       else
@@ -53,10 +62,17 @@ namespace :docker do
     end
   end
 
+  desc "Stop the container for a particular environment"
+  task :stop, :environment do |_t, args|
+    environment = Environment.parse(args)
+    sh "docker-compose -p #{environment} down"
+  end
+
+  desc "Starts a docker container in the #{Environment::Test} environment and runs rubocop, rspec"
   task :test, :environment do |_t, args|
     environment = Environment.parse(args)
     Rake::Task["docker:start"].invoke(environment)
-    sh "docker exec userservice_user_service_1 bundle exec rubocop"
-    sh "docker exec userservice_user_service_1 bundle exec rspec"
+    sh "docker exec #{container_name_for_environment(environment)} bundle exec rubocop"
+    sh "docker exec #{container_name_for_environment(environment)} bundle exec rspec"
   end
 end
