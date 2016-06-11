@@ -1,6 +1,12 @@
 sudo: required
+
 services:
     - docker
+
+language: ruby
+
+rvm:
+  - 2.3
 
 script:
     - rake docker:test[test]
